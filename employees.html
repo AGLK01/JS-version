@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <h1>Employee Management</h1>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="patients.html">Patient Management</a>
+        <a href="pharmacy.html">Pharmacy Management</a>
+        <a href="appointments.html">Appointment Management</a>
+    </nav>
+
+    <h2>Employee List</h2>
+    <table id="employeeTable">
+        <thead>
+            <tr>
+                <th>EID</th>
+                <th>Name</th>
+                <th>Access Level</th>
+                <th>Is Manager</th>
+                <th>Is MP</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <h2>Add Employee</h2>
+    <form id="employeeForm">
+        <label for="eid">EID:</label>
+        <input type="number" id="eid" required><br><br>
+        <label for="name">Name:</label>
+        <input type="text" id="name" required><br><br>
+        <label for="access_level">Access Level:</label>
+        <input type="text" id="access_level" required><br><br>
+        <label for="is_manager">Is Manager:</label>
+        <input type="checkbox" id="is_manager"><br><br>
+        <label for="is_mp">Is MP:</label>
+        <input type="checkbox" id="is_mp"><br><br>
+        <button type="submit">Add Employee</button>
+    </form>
+
+    <h2>Search Employee</h2>
+    <form id="searchEmployeeForm">
+        <label for="search_employee_name">Name:</label>
+        <input type="text" id="search_employee_name"><br><br>
+        <label for="search_employee_eid">EID:</label>
+        <input type="number" id="search_employee_eid"><br><br>
+        <button type="submit">Search</button>
+    </form>
+    <table id="employeeSearchTable">
+        <thead>
+            <tr>
+                <th>EID</th>
+                <th>Name</th>
+                <th>Access Level</th>
+                <th>Is Manager</th>
+                <th>Is MP</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        async function fetchEmployees() {
+            const response = await fetch('http://127.0.0.1:5000/employees');
+            const employees = await response.json();
+            const tableBody = document.querySelector('#employeeTable tbody');
+            tableBody.innerHTML = '';
+            employees.forEach(employee => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${employee.eid}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.access_level}</td>
+                    <td>${employee.ismanager}</td>
+                    <td>${employee.ismp}</td>
+                    <td>
+                        <button onclick="deleteEmployee(${employee.eid})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        document.getElementById('employeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newEmployee = {
+                EID: document.getElementById('eid').value,
+                name: document.getElementById('name').value,
+                access_level: document.getElementById('access_level').value,
+                IsManager: document.getElementById('is_manager').checked,
+                IsMP: document.getElementById('is_mp').checked
+            };
+
+            const response = await fetch('http://127.0.0.1:5000/add_employee', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newEmployee)
+            });
+            if (response.ok) {
+                alert('Employee added successfully!');
+                fetchEmployees();
+                document.getElementById('employeeForm').reset();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error}`);
+            }
+        });
+
+        async function deleteEmployee(eid) {
+            const response = await fetch(`http://127.0.0.1:5000/delete_employee?eid=${eid}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                alert('Employee deleted successfully!');
+                fetchEmployees();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error}`);
+            }
+        }
+
+        document.getElementById('searchEmployeeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('search_employee_name').value;
+            const eid = document.getElementById('search_employee_eid').value;
+            let query = `http://127.0.0.1:5000/employees/search?`;
+            if (name) query += `name=${name}&`;
+            if (eid) query += `eid=${eid}`;
+            const response = await fetch(query);
+            const employees = await response.json();
+            const tableBody = document.querySelector('#employeeSearchTable tbody');
+            tableBody.innerHTML = '';
+            employees.forEach(employee => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${employee.eid}</td>
+                    <td>${employee.name}</td>
+                    <td>${employee.access_level}</td>
+                    <td>${employee.ismanager}</td>
+                    <td>${employee.ismp}</td>
+                    <td>
+                        <button onclick="deleteEmployee(${employee.eid})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        });
+
+        fetchEmployees();
+    </script>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pharmacy Management</title>
+    <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+    <h1>Pharmacy Management</h1>
+    <nav>
+        <a href="home.html">Home</a>
+        <a href="employees.html">Employee Management</a>
+        <a href="patients.html">Patient Management</a>
+        <a href="appointments.html">Appointment Management</a> <!-- Added this link -->
+    </nav>
+
+    <h2>Pharmacy Inventory</h2>
+    <table id="pharmacyTable">
+        <thead>
+            <tr>
+                <th>Prescription ID</th>
+                <th>Drug Name</th>
+                <th>Cost</th>
+                <th>Quantity</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <h2>Add Drug</h2>
+    <form id="drugForm">
+        <label for="add_prescription_id">Prescription ID:</label>
+        <input type="number" id="add_prescription_id" required><br><br>
+        <label for="add_drug_name">Drug Name:</label>
+        <input type="text" id="add_drug_name" required><br><br>
+        <label for="add_cost">Cost:</label>
+        <input type="number" step="0.01" id="add_cost" required><br><br>
+        <label for="add_quantity">Quantity:</label>
+        <input type="number" id="add_quantity" required><br><br>
+        <button type="submit">Add Drug</button>
+    </form>
+
+    <h2>Delete Drug</h2>
+    <form id="deleteDrugForm">
+        <label for="delete_prescription_id">Prescription ID:</label>
+        <input type="number" id="delete_prescription_id" required><br><br>
+        <button type="submit">Delete Drug</button>
+    </form>
+
+    <h2>Issue Drug</h2>
+    <form id="issueDrugForm">
+        <label for="issue_mpid">Employee ID:</label>
+        <input type="number" id="issue_mpid" required><br><br>
+        <label for="issue_patient_id">Patient ID:</label>
+        <input type="number" id="issue_patient_id" required><br><br>
+        <label for="issue_prescription_id">Prescription ID:</label>
+        <input type="number" id="issue_prescription_id" required><br><br>
+        <button type="submit">Issue Drug</button>
+    </form>
+
+    <h2>Issued Drugs</h2>
+    <table id="issuedDrugsTable">
+        <thead>
+            <tr>
+                <th>Employee ID</th>
+                <th>Patient Name</th>
+                <th>Prescription ID</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        async function deleteDrug(prescription_id) {
+        const response = await fetch(`http://127.0.0.1:5000/delete_drug?prescription_id=${prescription_id}`, {
+            method: 'DELETE'
+        });
+        if (response.ok) {
+            alert('Drug deleted successfully!');
+            fetchPharmacy();  // refresh the table
+        } else {
+            const error = await response.json();
+            alert(`Error: ${error.error}`);
+        }
+    }
+
+    async function fetchPharmacy() {
+        // ... existing code
+    }
+        async function fetchPharmacy() {
+            const response = await fetch('http://127.0.0.1:5000/pharmacy');
+            const drugs = await response.json();
+            const tableBody = document.querySelector('#pharmacyTable tbody');
+            tableBody.innerHTML = '';
+            drugs.forEach(drug => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${drug.prescription_id}</td>
+                    <td>${drug.drug_name}</td>
+                    <td>${drug.cost}</td>
+                    <td>${drug.quantity}</td>
+                    <td>
+                        <button onclick="deleteDrug(${drug.prescription_id})">Delete</button>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+        
+        
+        async function fetchIssuedDrugs() {
+            const response = await fetch('http://127.0.0.1:5000/issued_drugs');
+            const issuedDrugs = await response.json();
+            const tableBody = document.querySelector('#issuedDrugsTable tbody');
+            tableBody.innerHTML = '';
+            issuedDrugs.forEach(drug => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${drug.mpid}</td>
+                    <td>${drug.patient_name}</td>
+                    <td>${drug.prescription_id}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        document.getElementById('drugForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const newDrug = {
+                prescription_id: document.getElementById('add_prescription_id').value,
+                drug_name: document.getElementById('add_drug_name').value,
+                cost: document.getElementById('add_cost').value,
+                quantity: document.getElementById('add_quantity').value
+            };
+
+            const response = await fetch('http://127.0.0.1:5000/add_drug', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newDrug)
+            });
+            if (response.ok) {
+                alert('Drug added successfully!');
+                fetchPharmacy();
+                document.getElementById('drugForm').reset();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error}`);
+            }
+        });
+
+        document.getElementById('deleteDrugForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const prescription_id = document.getElementById('delete_prescription_id').value;
+            const response = await fetch(`http://127.0.0.1:5000/delete_drug?prescription_id=${prescription_id}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                alert('Drug deleted successfully!');
+                fetchPharmacy();
+                document.getElementById('deleteDrugForm').reset();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error}`);
+            }
+        });
+
+        document.getElementById('issueDrugForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const issueDrug = {
+                MPID: document.getElementById('issue_mpid').value,
+                Patient_NID: document.getElementById('issue_patient_id').value,
+                Prescription_ID: document.getElementById('issue_prescription_id').value
+            };
+
+            const response = await fetch('http://127.0.0.1:5000/issue_drug', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(issueDrug)
+            });
+            if (response.ok) {
+                alert('Drug issued successfully!');
+                fetchPharmacy();
+                fetchIssuedDrugs();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error}`);
+            }
+        });
+
+        fetchPharmacy();
+        fetchIssuedDrugs();
+    </script>
+</body>
+</html>
