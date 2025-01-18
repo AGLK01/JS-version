@@ -43,7 +43,7 @@ async function getDbConnection() {
 // --------------------------------------------------
 /**
  * Generates a PBKDF2 (sha256) hash similar to Werkzeug's `pbkdf2:sha256`.
- * The format will be: pbkdf2:sha256:260000$salt$hash
+   The format will be: pbkdf2:sha256:260000$salt$hash
  */
 function generatePasswordHash(password) {
   const iterations = 260000;
