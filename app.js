@@ -2,11 +2,18 @@
  * app.js
  **********************************************/
 const express = require('express');
+
 const cors = require('cors');
 const { Pool } = require('pg');
 const crypto = require('crypto');
 
+require('dotenv').config();
+
 const app = express();
+app.use(express.static("public"));
+
+app.set('view engine', 'ejs');
+
 app.use(cors());
 app.use(express.json());
 
@@ -92,17 +99,37 @@ function checkPasswordHash(password, storedHash) {
 // In Flask, you had `@app.route('/')` returning `render_template('index.html')`. 
 // For now, we’ll just return a simple string or serve a static file.
 app.get('/', (req, res) => {
-  // If you want to serve an index.html, put your index file in e.g. /public
-  // and do: app.use(express.static('public'));
-  // Then redirect here:
-  // res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  res.send('Welcome to the converted Express server!');
+  res.render('index');
+});
+
+app.get('/home', (req, res) => {
+  res.render('home');
+});
+
+app.get('/appointments', (req, res) => {
+  res.render('appointments');
+});
+
+app.get('/patients', (req, res) => {
+  res.render('patients');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+app.get('/employees', (req, res) => {
+  res.render('employees');
+});
+
+app.get('/pharmacy', (req, res) => {
+  res.render('pharmacy');
 });
 
 // ------------------------
 // Employees Endpoints
 // ------------------------
-app.get('/employees', async (req, res) => {
+app.get('/api/employees', async (req, res) => {
   try {
     const client = await getDbConnection();
     const result = await client.query("SELECT * FROM Employee;");
@@ -114,7 +141,7 @@ app.get('/employees', async (req, res) => {
   }
 });
 
-app.post('/add_employee', async (req, res) => {
+app.post('/api/add_employee', async (req, res) => {
   const { EID, name, access_level, IsManager, IsMP } = req.body;
   try {
     const client = await getDbConnection();
@@ -130,7 +157,7 @@ app.post('/add_employee', async (req, res) => {
   }
 });
 
-app.delete('/delete_employee', async (req, res) => {
+app.delete('/api/delete_employee', async (req, res) => {
   const { eid } = req.query; // same as request.args.get('eid')
   try {
     const client = await getDbConnection();
@@ -145,7 +172,7 @@ app.delete('/delete_employee', async (req, res) => {
   }
 });
 
-app.get('/employees/search', async (req, res) => {
+app.get('/api/employees/search', async (req, res) => {
   const { name, eid } = req.query;
   try {
     const client = await getDbConnection();
@@ -173,7 +200,7 @@ app.get('/employees/search', async (req, res) => {
 // ------------------------
 // Patients Endpoints
 // ------------------------
-app.post('/add_patient', async (req, res) => {
+app.post('/api/add_patient', async (req, res) => {
   const { NID, name, dob, medical_records } = req.body;
   try {
     const client = await getDbConnection();
@@ -189,7 +216,7 @@ app.post('/add_patient', async (req, res) => {
   }
 });
 
-app.delete('/delete_patient', async (req, res) => {
+app.delete('/api/delete_patient', async (req, res) => {
   const { nid } = req.query;
   try {
     const client = await getDbConnection();
@@ -204,7 +231,7 @@ app.delete('/delete_patient', async (req, res) => {
   }
 });
 
-app.get('/patients', async (req, res) => {
+app.get('/api/patients', async (req, res) => {
   try {
     const client = await getDbConnection();
     const result = await client.query(
@@ -223,7 +250,7 @@ app.get('/patients', async (req, res) => {
   }
 });
 
-app.get('/search_patients', async (req, res) => {
+app.get('/api/search_patients', async (req, res) => {
   const { name, nid } = req.query;
   try {
     const client = await getDbConnection();
@@ -256,7 +283,7 @@ app.get('/search_patients', async (req, res) => {
 // ------------------------
 // Appointments Endpoints
 // ------------------------
-app.get('/appointments', async (req, res) => {
+app.get('/api/appointments', async (req, res) => {
   try {
     const client = await getDbConnection();
     const result = await client.query(
@@ -278,7 +305,7 @@ app.get('/appointments', async (req, res) => {
   }
 });
 
-app.post('/book_appointment', async (req, res) => {
+app.post('/api/book_appointment', async (req, res) => {
   const { Patient_NID, Department_Specialty, AppointmentDate, Reason } = req.body;
   try {
     const client = await getDbConnection();
@@ -294,7 +321,7 @@ app.post('/book_appointment', async (req, res) => {
   }
 });
 
-app.delete('/delete_appointment', async (req, res) => {
+app.delete('/api/delete_appointment', async (req, res) => {
   const { appointment_id } = req.query;
   try {
     const client = await getDbConnection();
@@ -309,7 +336,7 @@ app.delete('/delete_appointment', async (req, res) => {
   }
 });
 
-app.get('/search_appointments', async (req, res) => {
+app.get('/api/search_appointments', async (req, res) => {
   const { date, patient_id, department_specialty, appointment_id } = req.query;
   try {
     const client = await getDbConnection();
@@ -357,7 +384,7 @@ app.get('/search_appointments', async (req, res) => {
 // ------------------------
 // Pharmacy Endpoints
 // ------------------------
-app.get('/pharmacy', async (req, res) => {
+app.get('/api/pharmacy', async (req, res) => {
   try {
     const client = await getDbConnection();
     const result = await client.query(
@@ -375,7 +402,7 @@ app.get('/pharmacy', async (req, res) => {
   }
 });
 
-app.post('/add_drug', async (req, res) => {
+app.post('/api/add_drug', async (req, res) => {
   const { prescription_id, drug_name, cost, quantity } = req.body;
   try {
     const client = await getDbConnection();
@@ -391,7 +418,7 @@ app.post('/add_drug', async (req, res) => {
   }
 });
 
-app.delete('/delete_drug', async (req, res) => {
+app.delete('/api/delete_drug', async (req, res) => {
   const { prescription_id } = req.query;
   try {
     const client = await getDbConnection();
@@ -406,7 +433,7 @@ app.delete('/delete_drug', async (req, res) => {
   }
 });
 
-app.post('/issue_drug', async (req, res) => {
+app.post('/api/issue_drug', async (req, res) => {
   const { MPID, Patient_NID, Prescription_ID } = req.body;
   try {
     const client = await getDbConnection();
@@ -430,7 +457,7 @@ app.post('/issue_drug', async (req, res) => {
   }
 });
 
-app.get('/issued_drugs', async (req, res) => {
+app.get('/api/issued_drugs', async (req, res) => {
   try {
     const client = await getDbConnection();
     const result = await client.query(
@@ -455,7 +482,7 @@ app.get('/issued_drugs', async (req, res) => {
 // ------------------------
 
 // Register user
-app.post('/register', async (req, res) => {
+app.post('/api/register', async (req, res) => {
   const { username, password } = req.body;
   try {
     if (!username || !password) {
@@ -485,7 +512,7 @@ app.post('/register', async (req, res) => {
 });
 
 // Login user
-app.post('/login', async (req, res) => {
+app.post('/api/login', async (req, res) => {
   const { username, password } = req.body;
   try {
     if (!username || !password) {
