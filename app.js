@@ -125,7 +125,7 @@ app.get('/employees', (req, res) => {
 app.get('/pharmacy', (req, res) => {
   res.render('pharmacy');
 });
-
+module.exports = app;
 // ------------------------
 // Employees Endpoints
 // ------------------------
