@@ -99,11 +99,7 @@ function checkPasswordHash(password, storedHash) {
 // In Flask, you had `@app.route('/')` returning `render_template('index.html')`. 
 // For now, we’ll just return a simple string or serve a static file.
 app.get('/', (req, res) => {
-  res.render('index');
-});
-
-app.get('/index', (req, res) => {
-  res.render('index');
+  res.render('index', {url: process.env.URL});
 });
 
 app.get('/home', (req, res) => {
