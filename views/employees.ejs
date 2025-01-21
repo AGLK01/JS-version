@@ -71,8 +71,9 @@
     </table>
 
     <script>
+        const URL = "<%= url %>";
         async function fetchEmployees() {
-            const response = await fetch('http://127.0.0.1:5001/api/employees');
+            const response = await fetch(URL + '/api/employees');
             const employees = await response.json();
             const tableBody = document.querySelector('#employeeTable tbody');
             tableBody.innerHTML = '';
@@ -102,7 +103,7 @@
                 IsMP: document.getElementById('is_mp').checked
             };
 
-            const response = await fetch('http://127.0.0.1:5001/api/add_employee', {
+            const response = await fetch(URL + '/api/add_employee', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newEmployee)
@@ -118,7 +119,7 @@
         });
 
         async function deleteEmployee(eid) {
-            const response = await fetch(`http://127.0.0.1:5001/api/delete_employee?eid=${eid}`, {
+            const response = await fetch(URL + `/api/delete_employee?eid=${eid}`, {
                 method: 'DELETE'
             });
             if (response.ok) {
@@ -134,7 +135,7 @@
             e.preventDefault();
             const name = document.getElementById('search_employee_name').value;
             const eid = document.getElementById('search_employee_eid').value;
-            let query = `http://127.0.0.1:5001/api/employees/search?`;
+            let query = URL + `/api/employees/search?`;
             if (name) query += `name=${name}&`;
             if (eid) query += `eid=${eid}`;
             const response = await fetch(query);

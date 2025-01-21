@@ -76,8 +76,9 @@
     </table>
 
     <script>
+        const URL = "<%= url %>";
         async function deleteDrug(prescription_id) {
-        const response = await fetch(`http://127.0.0.1:5001/api/delete_drug?prescription_id=${prescription_id}`, {
+        const response = await fetch(URL + `/api/delete_drug?prescription_id=${prescription_id}`, {
             method: 'DELETE'
         });
         if (response.ok) {
@@ -93,7 +94,7 @@
         // ... existing code
     }
         async function fetchPharmacy() {
-            const response = await fetch('http://127.0.0.1:5001/api/pharmacy');
+            const response = await fetch(URL + '/api/pharmacy');
             const drugs = await response.json();
             const tableBody = document.querySelector('#pharmacyTable tbody');
             tableBody.innerHTML = '';
@@ -114,7 +115,7 @@
         
         
         async function fetchIssuedDrugs() {
-            const response = await fetch('http://127.0.0.1:5001/api/issued_drugs');
+            const response = await fetch(URL + '/api/issued_drugs');
             const issuedDrugs = await response.json();
             const tableBody = document.querySelector('#issuedDrugsTable tbody');
             tableBody.innerHTML = '';
@@ -138,7 +139,7 @@
                 quantity: document.getElementById('add_quantity').value
             };
 
-            const response = await fetch('http://127.0.0.1:5001/api/add_drug', {
+            const response = await fetch(URL + '/api/add_drug', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newDrug)
@@ -156,7 +157,7 @@
         document.getElementById('deleteDrugForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const prescription_id = document.getElementById('delete_prescription_id').value;
-            const response = await fetch(`http://127.0.0.1:5001/api/delete_drug?prescription_id=${prescription_id}`, {
+            const response = await fetch(URL + `/api/delete_drug?prescription_id=${prescription_id}`, {
                 method: 'DELETE'
             });
             if (response.ok) {
@@ -177,7 +178,7 @@
                 Prescription_ID: document.getElementById('issue_prescription_id').value
             };
 
-            const response = await fetch('http://127.0.0.1:5001/api/issue_drug', {
+            const response = await fetch(URL + '/api/issue_drug', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(issueDrug)

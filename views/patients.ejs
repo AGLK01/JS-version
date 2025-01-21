@@ -67,8 +67,9 @@
     </table>
 
     <script>
+        const URL = "<%= url %>";
         async function fetchPatients() {
-            const response = await fetch('http://127.0.0.1:5001/api/patients');
+            const response = await fetch(URL + '/api/patients');
             const patients = await response.json();
             const tableBody = document.querySelector('#patientTable tbody');
             tableBody.innerHTML = '';
@@ -94,7 +95,7 @@
         }
 
         async function deletePatient(nid) {
-            const response = await fetch(`http://127.0.0.1:5001/api/delete_patient?nid=${nid}`, {
+            const response = await fetch(URL + `/api/delete_patient?nid=${nid}`, {
                 method: 'DELETE'
             });
             if (response.ok) {
@@ -115,7 +116,7 @@
                 medical_records: document.getElementById('medical_records').value
             };
 
-            const response = await fetch('http://127.0.0.1:5001/api/add_patient', {
+            const response = await fetch(URL + '/api/add_patient', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newPatient)
@@ -134,7 +135,7 @@
             e.preventDefault();
             const name = document.getElementById('search_patient_name').value;
             const nid = document.getElementById('search_patient_nid').value;
-            let query = 'http://127.0.0.1:5001/api/search_patients?';
+            let query = URL + '/api/search_patients?';
             if (name) query += `name=${name}&`;
             if (nid) query += `nid=${nid}`;
             const response = await fetch(query);

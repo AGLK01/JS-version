@@ -111,19 +111,19 @@ app.get('/appointments', (req, res) => {
 });
 
 app.get('/patients', (req, res) => {
-  res.render('patients');
+  res.render('patients', {url: process.env.URL});
 });
 
 app.get('/register', (req, res) => {
-  res.render('register');
+  res.render('register', {url: process.env.URL});
 });
 
 app.get('/employees', (req, res) => {
-  res.render('employees');
+  res.render('employees', {url: process.env.URL});
 });
 
 app.get('/pharmacy', (req, res) => {
-  res.render('pharmacy');
+  res.render('pharmacy', {url: process.env.URL});
 });
 module.exports = app;
 // ------------------------
