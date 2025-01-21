@@ -71,6 +71,8 @@
     </table>
 
     <script>
+        const URL = "<%= url %>";
+
         function adjustTimeZone(dateString) {
             const date = new Date(dateString);
             date.setHours(date.getHours() - 3); // Adjusting 3 hours to reflect accurate time
@@ -86,7 +88,7 @@
                 Reason: document.getElementById('reason').value
             };
 
-            const response = await fetch('http://127.0.0.1:5001/api/book_appointment', {
+            const response = await fetch( URL + '/api/book_appointment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newAppointment)
@@ -102,7 +104,7 @@
         });
 
         async function fetchAppointments() {
-            const response = await fetch('http://127.0.0.1:5001/api/appointments');
+            const response = await fetch(URL + '/api/appointments');
             const appointments = await response.json();
             const tableBody = document.querySelector('#appointmentTable tbody');
             tableBody.innerHTML = '';
@@ -130,7 +132,7 @@
             const date = document.getElementById('search_appointment_date').value;
             const patient_id = document.getElementById('search_patient_id').value;
             const department_specialty = document.getElementById('search_department_specialty').value;
-            let query = `http://127.0.0.1:5001/api/search_appointments?`;
+            let query = URL + `/api/search_appointments?`;
             if (appointment_id) query += `appointment_id=${appointment_id}&`;
             if (date) query += `date=${date}&`;
             if (patient_id) query += `patient_id=${patient_id}&`;
@@ -158,7 +160,7 @@
         });
 
         async function deleteAppointment(appointment_id) {
-    const response = await fetch(`http://127.0.0.1:5001/api/delete_appointment?appointment_id=${appointment_id}`, {
+    const response = await fetch(URL + `/api/delete_appointment?appointment_id=${appointment_id}`, {
         method: 'DELETE'
     });
     if (response.ok) {

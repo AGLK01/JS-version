@@ -107,7 +107,7 @@ app.get('/home', (req, res) => {
 });
 
 app.get('/appointments', (req, res) => {
-  res.render('appointments');
+  res.render('appointments', {url: process.env.URL});
 });
 
 app.get('/patients', (req, res) => {
