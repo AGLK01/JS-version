@@ -55,7 +55,7 @@
 
                 if (response.ok) {
                     alert('Registration successful!');
-                    window.location.href = "login"; // Redirect to login page
+                    window.location.href = "index"; // Redirect to login page
                 } else {
                     const error = await response.json();
                     alert(`Error: ${error.error}`);
