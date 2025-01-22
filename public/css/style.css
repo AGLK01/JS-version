@@ -1,3 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 * {
     margin: 0;
@@ -5,6 +8,14 @@
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
 }
+
+@media (max-width: 768px) {
+    .custom-mobile-spacing {
+        margin: 16px;
+        padding: 16px;
+    }
+}
+
 
 body {
     background-color: #f9fafc;
