@@ -127,7 +127,7 @@ app.get('/pharmacy', (req, res) => {
 });
 module.exports = app;
 // ------------------------
-// Employees Endpointss
+// Employees Endpoints
 // ------------------------
 app.get('/api/employees', async (req, res) => {
   try {
