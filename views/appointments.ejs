@@ -1,88 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Appointment Management</title>
     <link rel="stylesheet" href="/css/style.css" />
 </head>
+
 <body>
-    <h1>Appointment Management</h1>
-    <nav>
-        <a href="home">Home</a>
-        <a href="employees">Employee Management</a>
-        <a href="patients">Patient Management</a>
-        <a href="pharmacy">Pharmacy Management</a>
-    </nav>
+    <header>
+        <h1>Appointment Management</h1>
+        <nav>
+            <a href="home">Home</a>
+            <a href="employees">Employee Management</a>
+            <a href="patients">Patient Management</a>
+            <a href="pharmacy">Pharmacy Management</a>
+        </nav>
+    </header>
 
-    <h2>Book an Appointment</h2>
-    <form id="appointmentForm">
-        <label for="patient_id">Patient ID:</label>
-        <input type="number" id="patient_id" name="patient_id" required placeholder="Enter patient ID"><br><br>
+    <main>
+        <section>
+            <h2>Book an Appointment</h2>
+            <form id="appointmentForm">
+                <label for="patient_id">Patient ID:</label>
+                <input type="number" id="patient_id" name="patient_id" required placeholder="Enter patient ID"><br><br>
 
-        <label for="department_specialty">Department Specialty:</label>
-        <input type="text" id="department_specialty" name="department_specialty" required placeholder="e.g., Cardiology"><br><br>
+                <label for="department_specialty">Department Specialty:</label>
+                <input type="text" id="department_specialty" name="department_specialty" required
+                    placeholder="e.g., Cardiology"><br><br>
 
-        <label for="appointment_date">Appointment Date:</label>
-        <input type="datetime-local" id="appointment_date" name="appointment_date" required><br><br>
+                <label for="appointment_date">Appointment Date:</label>
+                <input type="datetime-local" id="appointment_date" name="appointment_date" required><br><br>
 
-        <label for="reason">Reason:</label>
-        <textarea id="reason" name="reason" required placeholder="Enter the reason for the appointment"></textarea><br><br>
+                <label for="reason">Reason:</label>
+                <textarea id="reason" name="reason" required
+                    placeholder="Enter the reason for the appointment"></textarea><br><br>
 
-        <button type="submit">Book Appointment</button>
-    </form>
+                <button type="submit">Book Appointment</button>
+            </form>
+        </section>
 
-    <table id="appointmentTable">
-        <thead>
-            <tr>
-                <th>Appointment ID</th>
-                <th>Patient ID</th>
-                <th>Department Specialty</th>
-                <th>Appointment Date</th>
-                <th>Reason</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+        <section>
+            <h2>All Appointments</h2>
+            <table id="appointmentTable">
+                <thead>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Patient ID</th>
+                        <th>Department Specialty</th>
+                        <th>Appointment Date</th>
+                        <th>Reason</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
 
-    <h2>Search Appointments</h2>
-    <form id="searchAppointmentForm">
-        <label for="search_appointment_id">Appointment ID:</label>
-        <input type="number" id="search_appointment_id" name="search_appointment_id" placeholder="Search by ID"><br><br>
+        <section>
+            <h2>Search Appointments</h2>
+            <form id="searchAppointmentForm">
+                <label for="search_appointment_id">Appointment ID:</label>
+                <input type="number" id="search_appointment_id" name="search_appointment_id"
+                    placeholder="Search by ID"><br><br>
 
-        <label for="search_appointment_date">Appointment Date:</label>
-        <input type="date" id="search_appointment_date" name="search_appointment_date"><br><br>
+                <label for="search_appointment_date">Appointment Date:</label>
+                <input type="date" id="search_appointment_date" name="search_appointment_date"><br><br>
 
-        <label for="search_patient_id">Patient ID:</label>
-        <input type="number" id="search_patient_id" name="search_patient_id"><br><br>
+                <label for="search_patient_id">Patient ID:</label>
+                <input type="number" id="search_patient_id" name="search_patient_id"><br><br>
 
-        <label for="search_department_specialty">Department Specialty:</label>
-        <input type="text" id="search_department_specialty" name="search_department_specialty"><br><br>
+                <label for="search_department_specialty">Department Specialty:</label>
+                <input type="text" id="search_department_specialty" name="search_department_specialty"><br><br>
 
-        <button type="submit">Search</button>
-    </form>
+                <button type="submit">Search</button>
+            </form>
 
-    <table id="appointmentSearchTable">
-        <thead>
-            <tr>
-                <th>Appointment ID</th>
-                <th>Patient ID</th>
-                <th>Department Specialty</th>
-                <th>Appointment Date</th>
-                <th>Reason</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+            <table id="appointmentSearchTable">
+                <thead>
+                    <tr>
+                        <th>Appointment ID</th>
+                        <th>Patient ID</th>
+                        <th>Department Specialty</th>
+                        <th>Appointment Date</th>
+                        <th>Reason</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Abu al Qasim Al-Zahrawi Hospital. All Rights Reserved.</p>
+    </footer>
 
     <script>
         const URL = "<%= url %>";
 
         function adjustTimeZone(dateString) {
             const date = new Date(dateString);
-            date.setHours(date.getHours() - 3); // Adjust 3 hours to reflect accurate time
+            date.setHours(date.getHours() - 3);
             return date;
         }
 
@@ -185,4 +205,5 @@
         fetchAppointments();
     </script>
 </body>
+
 </html>

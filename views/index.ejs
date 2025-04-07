@@ -1,69 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Abu al Qasim Al-Zahrawi Hospital</title>
     <link rel="stylesheet" href="/css/style.css">
-    <style>
-        /* You can add additional custom styles here */
-        .container {
-            max-width: 400px;
-            margin: 2rem auto;
-        }
-        .card {
-            padding: 2rem;
-            background-color: #fff;
-            border-radius: 1rem;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-        label {
-            display: block;
-            margin-top: 1rem;
-        }
-        input {
-            width: 100%;
-            padding: 0.5rem;
-            margin-top: 0.25rem;
-        }
-        button {
-            margin-top: 1.5rem;
-            width: 100%;
-            padding: 0.75rem;
-        }
-        .link {
-            margin-top: 1rem;
-            text-align: center;
-        }
-    </style>
 </head>
+
 <body>
     <header>
         <h1>Login - Abu al Qasim Al-Zahrawi Hospital</h1>
     </header>
 
-    <section class="container">
-        <article class="card">
-            <h2 class="card-title">Login</h2>
-            <form id="loginForm">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required>
+    <main>
+        <section class="container">
+            <article class="card">
+                <h2 class="card-title">Login</h2>
+                <form id="loginForm">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required>
 
-                <button type="submit">Login</button>
-            </form>
+                    <button type="submit">Login</button>
+                </form>
 
-            <div class="link">
-                <p>Don't have an account? <a href="register">Register here</a></p>
-            </div>
-        </article>
-    </section>
+                <div class="link">
+                    <p>Don't have an account? <a href="/register">Register here</a></p>
+                </div>
+            </article>
+        </section>
+    </main>
 
     <footer>
-        <p>&copy; 2024 Abu al Qasim Al-Zahrawi Hospital. All Rights Reserved.</p>
+        <p>&copy; <span id="currentYear"></span> Abu al Qasim Al-Zahrawi Hospital. All Rights Reserved.</p>
     </footer>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
 
     <script>
         const URL = "<%= url %>";
@@ -83,7 +59,7 @@
 
                 if (response.ok) {
                     alert('Login successful!');
-                    window.location.href = "home";
+                    window.location.href = "/home";
                 } else {
                     const error = await response.json();
                     alert(`Error: ${error.error}`);
@@ -94,4 +70,5 @@
         });
     </script>
 </body>
+
 </html>
