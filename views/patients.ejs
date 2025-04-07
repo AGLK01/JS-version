@@ -27,13 +27,13 @@
                 <input type="number" id="nid" required><br><br>
 
                 <label for="patient_name">Name:</label>
-                <input type="text" id="patient_name" required><br><br>
+                <input type="text" id="patient_name" pattern="[A-Za-z]" required><br><br>
 
                 <label for="dob">Date of Birth:</label>
                 <input type="date" id="dob" required><br><br>
 
                 <label for="medical_records">Medical Records:</label>
-                <textarea id="medical_records" required></textarea><br><br>
+                <textarea id="medical_records" pattern = "[A-Za-z]" required></textarea><br><br>
 
                 <button type="submit">Register Patient</button>
             </form>
@@ -59,7 +59,7 @@
             <h2>Search Patient</h2>
             <form id="searchPatientForm">
                 <label for="search_patient_name">Name:</label>
-                <input type="text" id="search_patient_name"><br><br>
+                <input type="text" id="search_patient_name" pattern="[A-Za-z]"><br><br>
 
                 <label for="search_patient_nid">NID:</label>
                 <input type="number" id="search_patient_nid"><br><br>
