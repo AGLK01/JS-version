@@ -1,11 +1,10 @@
-<!DOCTYPE JSON>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Appointment Management</title>
-    <link rel="stylesheet" href="/css/style.css">
-
+    <link rel="stylesheet" href="/css/style.css" />
 </head>
 <body>
     <h1>Appointment Management</h1>
@@ -19,15 +18,20 @@
     <h2>Book an Appointment</h2>
     <form id="appointmentForm">
         <label for="patient_id">Patient ID:</label>
-        <input type="number" id="patient_id" required><br><br>
+        <input type="number" id="patient_id" name="patient_id" required placeholder="Enter patient ID"><br><br>
+
         <label for="department_specialty">Department Specialty:</label>
-        <input type="text" id="department_specialty" required><br><br>
+        <input type="text" id="department_specialty" name="department_specialty" required placeholder="e.g., Cardiology"><br><br>
+
         <label for="appointment_date">Appointment Date:</label>
-        <input type="datetime-local" id="appointment_date" required><br><br>
+        <input type="datetime-local" id="appointment_date" name="appointment_date" required><br><br>
+
         <label for="reason">Reason:</label>
-        <textarea id="reason" required></textarea><br><br>
+        <textarea id="reason" name="reason" required placeholder="Enter the reason for the appointment"></textarea><br><br>
+
         <button type="submit">Book Appointment</button>
     </form>
+
     <table id="appointmentTable">
         <thead>
             <tr>
@@ -39,22 +43,26 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <h2>Search Appointments</h2>
     <form id="searchAppointmentForm">
         <label for="search_appointment_id">Appointment ID:</label>
-        <input type="number" id="search_appointment_id"><br><br>
+        <input type="number" id="search_appointment_id" name="search_appointment_id" placeholder="Search by ID"><br><br>
+
         <label for="search_appointment_date">Appointment Date:</label>
-        <input type="date" id="search_appointment_date"><br><br>
+        <input type="date" id="search_appointment_date" name="search_appointment_date"><br><br>
+
         <label for="search_patient_id">Patient ID:</label>
-        <input type="number" id="search_patient_id"><br><br>
+        <input type="number" id="search_patient_id" name="search_patient_id"><br><br>
+
         <label for="search_department_specialty">Department Specialty:</label>
-        <input type="text" id="search_department_specialty"><br><br>
+        <input type="text" id="search_department_specialty" name="search_department_specialty"><br><br>
+
         <button type="submit">Search</button>
     </form>
+
     <table id="appointmentSearchTable">
         <thead>
             <tr>
@@ -66,8 +74,7 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <script>
@@ -75,7 +82,7 @@
 
         function adjustTimeZone(dateString) {
             const date = new Date(dateString);
-            date.setHours(date.getHours() - 3); // Adjusting 3 hours to reflect accurate time
+            date.setHours(date.getHours() - 3); // Adjust 3 hours to reflect accurate time
             return date;
         }
 
@@ -88,11 +95,12 @@
                 Reason: document.getElementById('reason').value
             };
 
-            const response = await fetch( URL + '/api/book_appointment', {
+            const response = await fetch(URL + '/api/book_appointment', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(newAppointment)
             });
+
             if (response.ok) {
                 alert('Appointment booked successfully!');
                 fetchAppointments();
@@ -110,7 +118,7 @@
             tableBody.innerHTML = '';
             appointments.forEach(appointment => {
                 const appointmentDate = adjustTimeZone(appointment.appointmentdate);
-                const formattedDate = appointmentDate.toISOString().split('T')[0]; // Format date to YYYY-MM-DD
+                const formattedDate = appointmentDate.toISOString().split('T')[0];
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${appointment.appointment_id}</td>
@@ -132,18 +140,20 @@
             const date = document.getElementById('search_appointment_date').value;
             const patient_id = document.getElementById('search_patient_id').value;
             const department_specialty = document.getElementById('search_department_specialty').value;
+
             let query = URL + `/api/search_appointments?`;
             if (appointment_id) query += `appointment_id=${appointment_id}&`;
             if (date) query += `date=${date}&`;
             if (patient_id) query += `patient_id=${patient_id}&`;
             if (department_specialty) query += `department_specialty=${department_specialty}&`;
-            const response = await fetch(query.slice(0, -1)); // Remove the trailing '&'
+
+            const response = await fetch(query.slice(0, -1));
             const appointments = await response.json();
             const tableBody = document.querySelector('#appointmentSearchTable tbody');
             tableBody.innerHTML = '';
             appointments.forEach(appointment => {
                 const appointmentDate = adjustTimeZone(appointment.appointmentdate);
-                const formattedDate = appointmentDate.toISOString().split('T')[0]; // Format date to YYYY-MM-DD
+                const formattedDate = appointmentDate.toISOString().split('T')[0];
                 const row = document.createElement('tr');
                 row.innerHTML = `
                     <td>${appointment.appointment_id}</td>
@@ -160,17 +170,17 @@
         });
 
         async function deleteAppointment(appointment_id) {
-    const response = await fetch(URL + `/api/delete_appointment?appointment_id=${appointment_id}`, {
-        method: 'DELETE'
-    });
-    if (response.ok) {
-        alert('Appointment deleted successfully!');
-        fetchAppointments();
-    } else {
-        const error = await response.json();
-        alert(`Error: ${error.error}`);
-    }
-}
+            const response = await fetch(URL + `/api/delete_appointment?appointment_id=${appointment_id}`, {
+                method: 'DELETE'
+            });
+            if (response.ok) {
+                alert('Appointment deleted successfully!');
+                fetchAppointments();
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.error}`);
+            }
+        }
 
         fetchAppointments();
     </script>

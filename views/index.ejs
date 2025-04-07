@@ -6,7 +6,35 @@
     <title>Login - Abu al Qasim Al-Zahrawi Hospital</title>
     <link rel="stylesheet" href="/css/style.css">
     <style>
-        /* Add any custom styles here */
+        /* You can add additional custom styles here */
+        .container {
+            max-width: 400px;
+            margin: 2rem auto;
+        }
+        .card {
+            padding: 2rem;
+            background-color: #fff;
+            border-radius: 1rem;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label {
+            display: block;
+            margin-top: 1rem;
+        }
+        input {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.25rem;
+        }
+        button {
+            margin-top: 1.5rem;
+            width: 100%;
+            padding: 0.75rem;
+        }
+        .link {
+            margin-top: 1rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -27,9 +55,9 @@
                 <button type="submit">Login</button>
             </form>
 
-            <form class="link">
+            <div class="link">
                 <p>Don't have an account? <a href="register">Register here</a></p>
-            </form>
+            </div>
         </article>
     </section>
 
@@ -39,12 +67,12 @@
 
     <script>
         const URL = "<%= url %>";
-        // Handle form submission
-        document.getElementById('loginForm').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent default form submission
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        document.getElementById('loginForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
 
             try {
                 const response = await fetch(URL + '/api/login', {
@@ -55,13 +83,13 @@
 
                 if (response.ok) {
                     alert('Login successful!');
-                    window.location.href = "home"; // Redirect to home page
+                    window.location.href = "home";
                 } else {
                     const error = await response.json();
                     alert(`Error: ${error.error}`);
                 }
-            } catch (error) {
-                alert(`Request failed: ${error.message}`);
+            } catch (err) {
+                alert(`Request failed: ${err.message}`);
             }
         });
     </script>

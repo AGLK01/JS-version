@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Register - Abu al Qasim Al-Zahrawi Hospital</title>
     <link rel="stylesheet" href="/css/style.css">
-    <style>
-        /* Add any custom styles here */
-    </style>
 </head>
 <body>
     <header>
@@ -16,7 +13,7 @@
 
     <section class="container">
         <article class="card">
-            <h2 class="card-title">Register</h2>
+            <h2 class="card-title">Create Your Account</h2>
             <form id="registerForm">
                 <label for="username">Username:</label>
                 <input type="text" id="username" name="username" required>
@@ -27,9 +24,9 @@
                 <button type="submit">Register</button>
             </form>
 
-            <form class="link">
+            <div class="link">
                 <p>Already have an account? <a href="/index">Login here</a></p>
-            </form>
+            </div>
         </article>
     </section>
 
@@ -39,12 +36,17 @@
 
     <script>
         const URL = "<%= url %>";
-        // Handle form submission
-        document.getElementById('registerForm').addEventListener('submit', async (event) => {
-            event.preventDefault(); // Prevent default form submission
 
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+        document.getElementById('registerForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+
+            if (!username || !password) {
+                alert('Please fill in both fields.');
+                return;
+            }
 
             try {
                 const response = await fetch(URL + '/api/register', {
@@ -55,7 +57,7 @@
 
                 if (response.ok) {
                     alert('Registration successful!');
-                    window.location.href = "index"; // Redirect to login page
+                    window.location.href = "index"; // Redirect to login
                 } else {
                     const error = await response.json();
                     alert(`Error: ${error.error}`);
